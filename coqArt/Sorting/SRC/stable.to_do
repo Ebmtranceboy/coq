@@ -1,0 +1,79 @@
+
+(*
+  Inductive list_ord: list A -> A -> A -> Prop:=
+  | list_ord_head : forall l a b, In b l -> list_ord (a::l) a b
+  | list_ord_cons : forall l a b, list_ord l a b -> forall c, list_ord (c::l) a b.
+
+  Definition le_l l a b:=
+    ((a<= b) /\ (~ a<= b)) \/ (a<= b) -> (b<= a) -> list_ord l a b.
+  
+  Definition stable_sort_spec f l:=
+    sorted (le_l l)(f l) /\ permutation l (f l).
+  
+  
+  
+  Function stable_split_rec (l1:list A) (l2:list A):=
+    match l1,l2 with
+    | a::l1',_::_::l2' =>
+      let (r1,r2):=stable_split_rec l1' l2' in
+      (a::r1,r2)
+    | l1',_ => (nil,l1')
+    end.
+
+  Definition stable_split l:= stable_split_rec l l.
+
+  Lemma stable_split__spec:
+    forall l1 l2,
+      let l:= (stable_split_rec l1 l2) in 
+      l1 = (fst l)++(snd l).
+  Proof.
+    intros l1 l2; functional induction (stable_split_rec l1 l2).
+    now rewrite IHp; rewrite e1.
+    reflexivity.
+  Qed.
+
+  Require Import Coq.Arith.Euclid.
+  Require Import NPeano.
+
+  Example lt_2_O: 2>0.
+  auto.
+  Qed.
+
+
+  Function div2 n:=
+    match n with
+    | S (S n) => S (div2 n)
+    | _ => 0
+    end.
+
+  Fixpoint min n m:=
+    match n,m with
+    | 0,_ | _,0 => 0
+    | S n,S m => S (min n m)
+    end.
+      
+  
+  Lemma stable_split__length:
+    forall l1 l2,
+      length(fst (stable_split_rec l1 l2)) = min ( length l1)(div2 (length l2)).
+  Proof.
+    intros l1 l2; functional induction (stable_split_rec l1 l2).
+    + rewrite e1 in IHp; simpl in *; now rewrite IHp.
+    + destruct l1; trivial.
+      destruct l2; [|destruct l2]; try reflexivity.
+      destruct y.
+  Qed.    
+
+
+  Lemma div2_decr:
+    forall n, 0 < n -> div2 n < n.
+  Proof with auto with arith.
+   intros n H; functional induction (div2 n) ...
+   -    destruct n0.
+        +    simpl ...
+        +    transitivity  (S (S n0)) ...
+  Qed.
+
+
+*)
+    

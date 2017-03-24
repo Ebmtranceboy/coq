@@ -1,0 +1,5 @@
+echo "-R . coqart86 " >_CoqProject ; find . -name '*.v' -print  >> _CoqProject;  echo 'COQDOCFLAGS = "-interpolate -utf8 --latex --html"' >> _CoqProject
+
+coq_makefile -f _CoqProject -o Makefile
+
+

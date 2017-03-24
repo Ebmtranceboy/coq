@@ -1,0 +1,41 @@
+SearchAbout smt.
+Locate "_ <= _".
+SearchPattern (_ + _ <= _ + _).
+SearchRewrite (_ + (_ - _)).
+Open Scope Z_scope.
+Close Scope Z_scope.
+Show Proof.
+apply trans_eq with (m:=[c;d]).
+Load "/home/joel/Documents/coq/Software Foundations/tuto6.v".
+discriminate H.
+(* Prelude
+Inductive and (P Q : Prop) : Prop :=
+  conj : P -> Q -> (and P Q).
+Inductive or (P Q : Prop) : Prop :=
+  | or_introl : P -> or P Q
+  | or_intror : Q -> or P Q.
+Inductive False : Prop := .
+Inductive True : Prop := I : True.
+Definition not (P:Prop) := P -> False.
+*)
+Theorem double_neg : ∀P : Prop, P → ~~P.
+Proof.intros.unfold not.auto.Qed.
+Fixpoint evenb (n:nat) :=
+  match n with
+  | 0 => True
+  | S 0 => False
+  | S (S m) => evenb m
+  end.
+Inductive ev : nat → Prop :=
+  | ev_0 : ev O
+  | ev_SS : ∀n:nat, ev n → ev (S (S n)).
+Check ev_ind.
+Print nat_rect.
+
+(* 5 equivalent classical propositions, unprovable in Coq *)
+Definition peirce := ∀P Q: Prop,  ((P→Q)→P)→P.
+Definition classic := ∀P:Prop,  ~~P → P.
+Definition excluded_middle := ∀P:Prop,  P ∨ ¬P.
+Definition de_morgan_not_and_not := ∀P Q:Prop,  ~(~P ∧ ¬Q) → P∨Q.
+Definition implies_to_or := ∀P Q:Prop,  (P→Q) → (¬P∨Q).
+
